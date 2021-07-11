@@ -38,10 +38,6 @@ namespace TrueTasksAPI.Controllers
         public IActionResult Get(int id)
         {
             var task = _taskService.GetTask(id);
-            if (task == null)
-            {
-                return NotFound();
-            }
             var data = _mapper.Map<TaskViewModel>(task);
             return Ok(data);
         }
