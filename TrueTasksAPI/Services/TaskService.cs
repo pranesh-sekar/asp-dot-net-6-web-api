@@ -31,30 +31,21 @@ namespace TrueTasksAPI.Services
             return task;
         }
 
-        public void addTask(Task obj)
+        public void addTask(Task data)
         {
-            Task newTask = new Task()
-            {
-                Name = obj.Name,
-                Description = obj.Description,
-                Status = obj.Status
-            };
-            _context.Tasks.Add(newTask);
-            _context.SaveChanges();
+            this._AddTask(data);
+            this._CommitChanges();
         }
 
-        public void updateTask(Task obj)
+        public void UpdateTask(Task data)
         {
-            Task task = this._GetTask(obj.Id);
+            Task task = this._GetTask(data.Id);
             if (task == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound, ErrorConstants.NotFound);
             }
-            task.Name = obj.Name;
-            task.Description = obj.Description;
-            task.Status = obj.Status;
-            
-            _context.SaveChanges();
+            this._UpdateTask(task, data);
+            this._CommitChanges();
         }
 
         public void RemoveTask(int id)
@@ -64,8 +55,8 @@ namespace TrueTasksAPI.Services
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound, ErrorConstants.NotFound);
             }
-            _context.Tasks.Remove(task);
-            _context.SaveChanges();
+            this._RemoveTask(task);
+            this._CommitChanges();
         }
 
         private List<Task> _GetAllTasks()
@@ -78,6 +69,32 @@ namespace TrueTasksAPI.Services
             return _context.Tasks.FirstOrDefault(task => task.Id == id);
         }
 
+        private void _AddTask(Task data)
+        {
+            Task newTask = new Task()
+            {
+                Name = data.Name,
+                Description = data.Description,
+                Status = data.Status
+            };
+            _context.Tasks.Add(newTask);
+        }
 
+        private void _UpdateTask(Task task, Task data)
+        {
+            task.Name = data.Name;
+            task.Description = data.Description;
+            task.Status = data.Status;
+        }
+
+        private void _RemoveTask(Task task)
+        {
+            _context.Tasks.Remove(task);
+        }
+
+        private void _CommitChanges()
+        {
+            _context.SaveChanges();
+        }
     }
 }

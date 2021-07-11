@@ -58,7 +58,7 @@ namespace TrueTasksAPI.Controllers
         public IActionResult Put(TaskViewModel taskViewModel)
         {
             var task = _mapper.Map<Task>(taskViewModel);
-            _taskService.updateTask(task);
+            _taskService.UpdateTask(task);
             return Ok();
         }
 
