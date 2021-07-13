@@ -11,14 +11,22 @@ namespace TrueTasksAPI.Services
     public class TaskService
     {
         private AppDbContext _context;
-        public TaskService(AppDbContext appDbContext)
+        private CategoryService _categoryService;
+
+        public TaskService(
+            AppDbContext appDbContext,
+            CategoryService categoryService
+            )
         {
             _context = appDbContext;
+            _categoryService = categoryService;
         }
 
         public List<Task> GetAllTasks()
         {
-            return this._GetAllTasks();
+            List < Task > allTasks = this._GetAllTasks();
+            allTasks.ForEach(t => t.Category = this._categoryService.GetCategory(t.CategoryId));
+            return allTasks;
         }
 
         public Task GetTask(int id)
@@ -28,10 +36,11 @@ namespace TrueTasksAPI.Services
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound, ErrorConstants.NotFound);
             }
+            task.Category = this._categoryService.GetCategory(task.CategoryId);
             return task;
         }
 
-        public void addTask(Task data)
+        public void AddTask(Task data)
         {
             this._AddTask(data);
             this._CommitChanges();
@@ -71,20 +80,25 @@ namespace TrueTasksAPI.Services
 
         private void _AddTask(Task data)
         {
-            Task newTask = new Task()
+            Task task = new Task()
             {
                 Name = data.Name,
                 Description = data.Description,
-                Status = data.Status
+                Status = data.Status,
+                CategoryId = data.CategoryId,
+                Category = this._categoryService.GetCategory(data.CategoryId)
             };
-            _context.Tasks.Add(newTask);
+            _context.Tasks.Add(task);
         }
 
         private void _UpdateTask(Task task, Task data)
         {
             task.Name = data.Name;
             task.Description = data.Description;
-            task.Status = data.Status;
+            task.Status = data.Status;            
+            task.CategoryId = data.CategoryId;
+            task.Category = this._categoryService.GetCategory(data.CategoryId);
+            
         }
 
         private void _RemoveTask(Task task)

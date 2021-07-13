@@ -1,4 +1,5 @@
 ﻿using TrueTasksAPI.Models;
+
 using System.ComponentModel.DataAnnotations;
 
 namespace TrueTasksAPI.ViewModels
@@ -15,5 +16,8 @@ namespace TrueTasksAPI.ViewModels
         [Required]
         [EnumDataType(typeof(TaskStatus))]
         public TaskStatus Status { get; set; }
+
+        public int CategoryId { get; set; }
+        public CategoryViewModel Category { get; set; }
     }
 }

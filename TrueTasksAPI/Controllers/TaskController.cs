@@ -29,31 +29,31 @@ namespace TrueTasksAPI.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            var  allTasks = _taskService.GetAllTasks();
-            var data = _mapper.Map<IEnumerable<TaskViewModel>>(allTasks);
+            IEnumerable<Task> allTasks = _taskService.GetAllTasks();
+            IEnumerable<TaskViewModel> data = _mapper.Map<IEnumerable<TaskViewModel>>(allTasks);
             return Ok(data);
         }
 
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            var task = _taskService.GetTask(id);
-            var data = _mapper.Map<TaskViewModel>(task);
+            Task task = _taskService.GetTask(id);
+            TaskViewModel data = _mapper.Map<TaskViewModel>(task);
             return Ok(data);
         }
 
         [HttpPost]
         public IActionResult Post(TaskViewModel taskViewModel) 
         {
-            var task = _mapper.Map<Task>(taskViewModel);
-            _taskService.addTask(task);
+            Task task = _mapper.Map<Task>(taskViewModel);
+            _taskService.AddTask(task);
             return Ok();
         }
 
         [HttpPut]
         public IActionResult Put(TaskViewModel taskViewModel)
         {
-            var task = _mapper.Map<Task>(taskViewModel);
+            Task task = _mapper.Map<Task>(taskViewModel);
             _taskService.UpdateTask(task);
             return Ok();
         }

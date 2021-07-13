@@ -65,7 +65,9 @@ namespace TrueTasksAPI
             });
 
             services.AddDbContext<AppDbContext>(options => options.UseSqlServer(DbConnectionString));
+
             services.AddTransient<TaskService>();
+            services.AddTransient<CategoryService>();
 
         }
 
